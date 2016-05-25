@@ -21,6 +21,9 @@
 #include <wchar.h>
 #include <stdlib.h>
 
+#include <atomic>
+#include <chrono>
+#include <random>
 
 class PcmGenerator
 {
@@ -29,16 +32,53 @@ class PcmGenerator
   int m_size;
   float m_a;
   float m_b;
+  std::mt19937 m_generator;
+  std::uniform_real_distribution<> m_distribution;
+
+  template<typename clock, typename output>
+  static void push_clock(output& buffer)
+  {
+    auto now = clock::now().time_since_epoch().count();
+    auto now_count = sizeof(now) / sizeof(output::value_type);
+
+    for (auto i = 0; i < now_count; ++i)
+    {
+      buffer.push_back(static_cast<output::value_type>(now));
+      now >>= 8 * sizeof(output::value_type);
+    }
+  }
+
+  static std::mt19937 create_generator()
+  {
+    std::vector<std::seed_seq::result_type> buffer;
+    std::random_device rd;
+
+    for (auto i = 0; i < std::mt19937::state_size; ++i)
+      buffer.push_back(rd());
+
+    // Work-around MinGW's random_device brain damage...
+    for (auto i = 0; i < 8; ++i)
+      buffer.push_back(rand());
+
+    push_clock<std::chrono::high_resolution_clock>(buffer);
+    push_clock<std::chrono::system_clock>(buffer);
+
+    static std::atomic<decltype(buffer)::value_type> counter;
+
+    buffer.push_back(++counter);
+
+    std::seed_seq seed(begin(buffer), end(buffer));
+
+    return std::mt19937(seed);
+  }
 
   double random()
   {
-    int const range_max = 32768;
-    int const range_min = -32767;
-    return (double)rand() / (RAND_MAX + 1) * (range_max - range_min) + range_min;
+    return m_distribution(m_generator);
   }
 public:
 
-  explicit PcmGenerator(int size)
+  explicit PcmGenerator(int size) : m_generator(create_generator()), m_distribution(-32767, 32768)
   {    
     m_size = size >= 0 ? size : 0;
     m_buffer_ch0 = new float [m_size];
