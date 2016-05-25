@@ -764,6 +764,15 @@ maybeSyncWord(FILE* fpStream)
     return 0;
 }
 
+static int fseek_size_t(FILE *stream, size_t offset, int whence)
+{
+#if _MSC_VER
+    return _fseeki64(stream, offset, whence);
+#else
+    return fseek(stream, offset, whence);
+#endif
+}
+
 static int
 skipId3v2(FILE * fpStream, size_t lametag_frame_size)
 {
@@ -792,13 +801,13 @@ skipId3v2(FILE * fpStream, size_t lametag_frame_size)
             + sizeof id3v2Header;
     }
     /* Seek to the beginning of the audio stream */
-    if ( fseek(fpStream, id3v2TagSize, SEEK_SET) != 0 ) {
+    if ( fseek_size_t(fpStream, id3v2TagSize, SEEK_SET) != 0 ) {
         return -2;
     }
     if ( maybeSyncWord(fpStream) != 0) {
         return -1;
     }
-    if ( fseek(fpStream, id3v2TagSize+lametag_frame_size, SEEK_SET) != 0 ) {
+    if ( fseek_size_t(fpStream, id3v2TagSize+lametag_frame_size, SEEK_SET) != 0 ) {
         return -2;
     }
     if ( maybeSyncWord(fpStream) != 0) {
@@ -806,7 +815,7 @@ skipId3v2(FILE * fpStream, size_t lametag_frame_size)
     }
     /* OK, it seems we found our LAME-Tag/Xing frame again */
     /* Seek to the beginning of the audio stream */
-    if ( fseek(fpStream, id3v2TagSize, SEEK_SET) != 0 ) {
+    if ( fseek_size_t(fpStream, id3v2TagSize, SEEK_SET) != 0 ) {
         return -2;
     }
     return 0;

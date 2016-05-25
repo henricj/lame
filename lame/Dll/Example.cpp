@@ -197,9 +197,9 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	DWORD dwRead=0;
+	size_t dwRead=0;
 	DWORD dwWrite=0;
-	DWORD dwDone=0;
+	size_t dwDone=0;
 	DWORD dwFileSize=0;
 
 	// Seek to end of file
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
 	while ( (dwRead=fread(pWAVBuffer,sizeof(SHORT),dwSamples,pFileIn)) >0 )
 	{
 		// Encode samples
-		err = beEncodeChunk(hbeStream, dwRead, pWAVBuffer, pMP3Buffer, &dwWrite);
+		err = beEncodeChunk(hbeStream, (DWORD)dwRead, pWAVBuffer, pMP3Buffer, &dwWrite);
 
 		// Check result
 		if(err != BE_ERR_SUCCESSFUL)
