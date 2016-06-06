@@ -20,20 +20,22 @@
 #include <lame.h>
 #include <wchar.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include <atomic>
 #include <chrono>
+#include <memory>
 #include <random>
 
 class PcmGenerator
 {
-  float* m_buffer_ch0;
-  float* m_buffer_ch1;
+  std::unique_ptr<float[]> m_buffer_ch0;
+  std::unique_ptr<float[]> m_buffer_ch1;
   int m_size;
   float m_a;
   float m_b;
   std::mt19937 m_generator;
-  std::uniform_real_distribution<> m_distribution;
+  std::uniform_real_distribution<float> m_distribution;
 
   template<typename clock, typename output>
   static void push_clock(output& buffer)
@@ -41,7 +43,7 @@ class PcmGenerator
     auto now = clock::now().time_since_epoch().count();
     auto now_count = sizeof(now) / sizeof(output::value_type);
 
-    for (auto i = 0; i < now_count; ++i)
+    for (decltype(now_count) i = 0; i < now_count; ++i)
     {
       buffer.push_back(static_cast<output::value_type>(now));
       now >>= 8 * sizeof(output::value_type);
@@ -63,7 +65,7 @@ class PcmGenerator
     push_clock<std::chrono::high_resolution_clock>(buffer);
     push_clock<std::chrono::system_clock>(buffer);
 
-    static std::atomic<decltype(buffer)::value_type> counter;
+    static std::atomic<decltype(buffer)::value_type> counter = 1;
 
     buffer.push_back(++counter);
 
@@ -72,7 +74,7 @@ class PcmGenerator
     return std::mt19937(seed);
   }
 
-  double random()
+  float random()
   {
     return m_distribution(m_generator);
   }
@@ -81,8 +83,8 @@ public:
   explicit PcmGenerator(int size) : m_generator(create_generator()), m_distribution(-32767, 32768)
   {    
     m_size = size >= 0 ? size : 0;
-    m_buffer_ch0 = new float [m_size];
-    m_buffer_ch1 = new float [m_size];
+    m_buffer_ch0 = std::make_unique<float[]>(m_size);
+    m_buffer_ch1 = std::make_unique<float[]>(m_size);
     m_a = 0;
     m_b = 0;
     advance(0);
@@ -90,12 +92,10 @@ public:
 
   ~PcmGenerator()
   {
-    delete[] m_buffer_ch0;
-    delete[] m_buffer_ch1;
   }
 
-  float const* ch0() const { return m_buffer_ch0; }
-  float const* ch1() const { return m_buffer_ch1; }
+  float const* ch0() const { return m_buffer_ch0.get(); }
+  float const* ch1() const { return m_buffer_ch1.get(); }
 
   void advance( int x ) {
     float a = m_a;
@@ -125,7 +125,7 @@ public:
   explicit OutFile(wchar_t const* filename)
     : m_file_handle(0)
   {
-    m_file_handle = _wfopen(filename, L"wb");
+    m_file_handle = _wfopen(filename, L"wbS");
   }
   
   ~OutFile()
@@ -144,8 +144,12 @@ public:
     }
   }
 
-  void write(unsigned char const* data, int n) {
-    fwrite(data, 1, n, m_file_handle);
+  int seek(long offset) {
+      return fseek(m_file_handle, offset, SEEK_SET);
+  }
+
+  size_t write(unsigned char const* data, int n) {
+    return fwrite(data, 1, n, m_file_handle);
   }
 };
 
@@ -224,7 +228,7 @@ public:
 
 class OutBuffer
 {
-  unsigned char* m_data;
+  std::unique_ptr<unsigned char[]> m_data;
   int m_size;
   int m_used;
 
@@ -233,16 +237,12 @@ public:
   OutBuffer()
   {
     m_size = 1000 * 1000;
-    m_data = new unsigned char[ m_size ];
+    m_data = std::make_unique<unsigned char[]>(m_size);
     m_used = 0;
   }
 
-  ~OutBuffer() 
-  {
-    delete[] m_data;
-  }
-
   void advance( int i ) {
+    assert(m_used + i <= m_size);
     m_used += i;
   }
 
@@ -254,9 +254,28 @@ public:
     return m_size - m_used;
   }
 
-  unsigned char* current() { return m_data + m_used; }
-  unsigned char* begin()   { return m_data; }
+  void reset() {
+      m_used = 0;
+  }
+
+  unsigned char* current() { return m_data.get() + m_used; }
+  unsigned char* begin()   { return m_data.get(); }
 };
+
+static void flushBuffer(Lame& lame, OutFile& mp3_stream, OutBuffer& mp3_stream_buffer, bool& first_write)
+{
+  if (first_write) {
+    first_write = false;
+
+    int lametag_size0 = lame.getLameTag(0, 0);
+    wprintf(L"lametag_size0=%d\n", lametag_size0);
+
+    mp3_stream.seek(lametag_size0);
+  }
+
+  mp3_stream.write(mp3_stream_buffer.begin(), mp3_stream_buffer.used());
+  mp3_stream_buffer.reset();
+}
 
 void generateFile(wchar_t const* filename, size_t n)
 {
@@ -276,9 +295,15 @@ void generateFile(wchar_t const* filename, size_t n)
   lame.setOutSamplerate(44100);
   lame.setNumChannels(2);
 
-  while (n > 0) {    
+  bool first_write = true;
+
+  while (n > 0) {
     int const m = n < chunk ? n : chunk;
     if ( n < chunk ) n = 0; else n -= chunk;
+
+    if (mp3_stream_buffer.unused() < 3072)
+      flushBuffer(lame, mp3_stream, mp3_stream_buffer, first_write);
+
     rc = lame.encode(src.ch0(), src.ch1(), m, mp3_stream_buffer.current(), mp3_stream_buffer.unused());
     wprintf(L"rc=%d %d %d\n",rc,mp3_stream_buffer.used(),mp3_stream_buffer.unused());
     if (rc < 0) return;
@@ -286,11 +311,17 @@ void generateFile(wchar_t const* filename, size_t n)
     src.advance(m);
   }
 
+  if (mp3_stream_buffer.unused() < 16 * 1024)
+    flushBuffer(lame, mp3_stream, mp3_stream_buffer, first_write);
+
   rc = lame.flush(mp3_stream_buffer.current(), mp3_stream_buffer.unused());
   wprintf(L"flush rc=%d\n",rc);
   if (rc < 0) return;
 
   mp3_stream_buffer.advance( rc );
+
+  if (mp3_stream_buffer.used() > 0)
+    flushBuffer(lame, mp3_stream, mp3_stream_buffer, first_write);
 
   int lametag_size = lame.getLameTag(0,0);
   wprintf(L"lametag_size=%d\n",lametag_size);
@@ -299,6 +330,11 @@ void generateFile(wchar_t const* filename, size_t n)
   wprintf(L"rc=%d\n",rc);
   if (rc < 0) return;
 
+  mp3_stream_buffer.advance(rc);
+
+  mp3_stream.seek(0);
+
+  // Clobber the start of the file with the lametag. (?)
   mp3_stream.write(mp3_stream_buffer.begin(), mp3_stream_buffer.used());
 
   lame.close();
