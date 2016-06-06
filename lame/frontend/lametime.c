@@ -48,23 +48,41 @@
 
 #include "lametime.h"
 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif
+
 #if !defined(CLOCKS_PER_SEC)
 # warning Your system does not define CLOCKS_PER_SEC, guessing one...
 # define CLOCKS_PER_SEC 1000000
 #endif
 
-
 double
 GetCPUTime(void)
 {
+#if _WIN32
+    static double scale = -1;
+
+    if (scale <= 0) {
+      LARGE_INTEGER freq;
+
+      QueryPerformanceFrequency(&freq);
+
+      scale = 1.0 / freq.QuadPart;
+    }
+
+    LARGE_INTEGER pc;
+    QueryPerformanceCounter(&pc);
+
+    return pc.QuadPart * scale;
+#else
     clock_t t;
 
-#if defined(_MSC_VER)  ||  defined(__BORLANDC__)
     t = clock();
-#else
-    t = clock();
-#endif
+
     return t / (double) CLOCKS_PER_SEC;
+#endif
 }
 
 
