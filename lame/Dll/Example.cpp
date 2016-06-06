@@ -19,12 +19,15 @@
  * Boston, MA  02111-1307, USA.
  */
 
-
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdio.h>
 #include <io.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+
+#include <memory>
+
 #include "BladeMP3EncDLL.h"
 
 BEINITSTREAM		beInitStream=NULL;
@@ -52,9 +55,6 @@ int main(int argc, char *argv[])
 	DWORD		dwMP3Buffer		=0;
 	HBE_STREAM	hbeStream		=0;
 	BE_ERR		err				=0;
-
-	PBYTE		pMP3Buffer		=NULL;
-	PSHORT		pWAVBuffer		=NULL;
 
 	// check number of arguments
 	if(argc != 2)
@@ -183,10 +183,10 @@ int main(int argc, char *argv[])
 
 
 	// Allocate MP3 buffer
-	pMP3Buffer = new BYTE[dwMP3Buffer];
+	auto pMP3Buffer = std::make_unique<BYTE[]>(dwMP3Buffer);
 
 	// Allocate WAV buffer
-	pWAVBuffer = new SHORT[dwSamples];
+	auto pWAVBuffer = std::make_unique<SHORT[]>(dwSamples);
 
 	// Check if Buffer are allocated properly
 	if(!pMP3Buffer || !pWAVBuffer)
@@ -214,10 +214,10 @@ int main(int argc, char *argv[])
 
 
 	// Convert All PCM samples
-	while ( (dwRead=fread(pWAVBuffer,sizeof(SHORT),dwSamples,pFileIn)) >0 )
+	while ( (dwRead=fread(pWAVBuffer.get(),sizeof(SHORT),dwSamples,pFileIn)) >0 )
 	{
 		// Encode samples
-		err = beEncodeChunk(hbeStream, (DWORD)dwRead, pWAVBuffer, pMP3Buffer, &dwWrite);
+		err = beEncodeChunk(hbeStream, (DWORD)dwRead, pWAVBuffer.get(), pMP3Buffer.get(), &dwWrite);
 
 		// Check result
 		if(err != BE_ERR_SUCCESSFUL)
@@ -227,8 +227,8 @@ int main(int argc, char *argv[])
 			return -1;
 		}
 
-		// write dwWrite bytes that are returned in tehe pMP3Buffer to disk
-		if(fwrite(pMP3Buffer,1,dwWrite,pFileOut) != dwWrite)
+		// write dwWrite bytes that are returned in the pMP3Buffer to disk
+		if(fwrite(pMP3Buffer.get(),1,dwWrite,pFileOut) != dwWrite)
 		{
 			fprintf(stderr,"Output file write error");
 			return -1;
@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Deinit the stream
-	err = beDeinitStream(hbeStream, pMP3Buffer, &dwWrite);
+	err = beDeinitStream(hbeStream, pMP3Buffer.get(), &dwWrite);
 
 	// Check result
 	if(err != BE_ERR_SUCCESSFUL)
@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
 	// If so, write them to disk
 	if( dwWrite )
 	{
-		if( fwrite( pMP3Buffer, 1, dwWrite, pFileOut ) != dwWrite )
+		if( fwrite( pMP3Buffer.get(), 1, dwWrite, pFileOut ) != dwWrite )
 		{
 			fprintf(stderr,"Output file write error");
 			return -1;
@@ -264,12 +264,6 @@ int main(int argc, char *argv[])
 
 	// close the MP3 Stream
 	beCloseStream( hbeStream );
-
-	// Delete WAV buffer
-	delete [] pWAVBuffer;
-
-	// Delete MP3 Buffer
-	delete [] pMP3Buffer;
 
 	// Close input file
 	fclose( pFileIn );
