@@ -245,4 +245,5 @@ ModelManifest.xml
 .fake/
 
 lame/config.h
-
+lame/obj/
+lame/output/
