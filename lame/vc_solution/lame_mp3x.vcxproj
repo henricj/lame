@@ -19,52 +19,56 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>app mp3rtp</ProjectName>
-    <ProjectGuid>{C04BA4EA-F719-456D-A332-6C3AF92D7BEA}</ProjectGuid>
-    <RootNamespace>mp3rtp</RootNamespace>
+    <ProjectName>app mp3x</ProjectName>
+    <ProjectGuid>{E745EB1A-070A-45ED-B8BD-D9F794E23CFA}</ProjectGuid>
+    <RootNamespace>mp3x</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNASM|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="vc9_lame_config.props" />
+    <Import Project="lame_config.props" />
     <Import Project="arch_sse2.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="vc9_lame_config.props" />
+    <Import Project="lame_config.props" />
     <Import Project="arch_x87.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="vc9_lame_config.props" />
+    <Import Project="lame_config.props" />
     <Import Project="arch_x87.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNASM|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="vc9_lame_config.props" />
+    <Import Project="lame_config.props" />
     <Import Project="arch_nasm.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -73,7 +77,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNASM|Win32'">
     <Midl>
-      <TypeLibraryName>..\output\ReleaseNASM/mp3rtp.tlb</TypeLibraryName>
+      <TypeLibraryName>..\output\ReleaseNASM/mp3x.tlb</TypeLibraryName>
       <HeaderFileName />
     </Midl>
     <ClCompile>
@@ -81,45 +85,49 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;HAVE_NASM;MMX_choose_table;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./WinGTK/gtk-plus;./WinGTK/glib-1.2;./WinGtk/src/gtk+;./WinGtk/src/glib;./WinGtk/src/gtk+/gdk;../include;../libmp3lame;../mp3x;../frontend;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;LAMEPARSE;WIN32;_CONSOLE;HAVE_MPGLIB;LAMESNDFILE;BRHIST;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)mp3rtp.exe</OutputFile>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;gdk-1.3.lib;gtk-1.3.lib;glib-1.3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)mp3x.exe</OutputFile>
+      <AdditionalLibraryDirectories>./WinGtk/src/gtk+/gtk;./WinGtk/src/gtk+/gdk;./WinGtk/src/glib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>..\obj\ReleaseNASM\frontend/mp3x.map</MapFileName>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
-      <TypeLibraryName>..\output\Debug/mp3rtp.tlb</TypeLibraryName>
+      <TypeLibraryName>..\output\Debug/mp3x.tlb</TypeLibraryName>
       <HeaderFileName />
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;../mpglib;../libmp3lame;../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./WinGtk/src/gtk+;./WinGtk/src/glib;./WinGtk/src/gtk+/gdk;../include;../libmp3lame;../mp3x;../frontend;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>LAMESNDFILE;BRHIST;_DEBUG;WIN32;_CONSOLE;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)mp3rtp.exe</OutputFile>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;gdk-1.3.lib;gtk-1.3.lib;glib-1.3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)mp3x.exe</OutputFile>
+      <AdditionalLibraryDirectories>./WinGtk/src/gtk+/gtk;./WinGtk/src/gtk+/gdk;./WinGtk/src/glib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
-      <TypeLibraryName>..\output\Release/mp3rtp.tlb</TypeLibraryName>
+      <TypeLibraryName>..\output\Release/mp3x.tlb</TypeLibraryName>
       <HeaderFileName />
     </Midl>
     <ClCompile>
@@ -127,22 +135,25 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./WinGTK/gtk-plus;./WinGTK/glib-1.2;./WinGtk/src/gtk+;./WinGtk/src/glib;./WinGtk/src/gtk+/gdk;../include;../libmp3lame;../mp3x;../frontend;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;LAMEPARSE;WIN32;_CONSOLE;HAVE_MPGLIB;LAMESNDFILE;BRHIST;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)mp3rtp.exe</OutputFile>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;gdk-1.3.lib;gtk-1.3.lib;glib-1.3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)mp3x.exe</OutputFile>
+      <AdditionalLibraryDirectories>./WinGtk/src/gtk+/gtk;./WinGtk/src/gtk+/gdk;./WinGtk/src/glib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>..\obj\Release\frontend/mp3x.map</MapFileName>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|Win32'">
     <Midl>
-      <TypeLibraryName>..\output\Release/mp3rtp.tlb</TypeLibraryName>
+      <TypeLibraryName>..\output\ReleaseSSE2/mp3x.tlb</TypeLibraryName>
       <HeaderFileName />
     </Midl>
     <ClCompile>
@@ -150,16 +161,19 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..;../mpglib;../libmp3lame;../include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_CONSOLE;_WINDOWS;HAVE_MPGLIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./WinGTK/gtk-plus;./WinGTK/glib-1.2;./WinGtk/src/gtk+;./WinGtk/src/glib;./WinGtk/src/gtk+/gdk;../include;../libmp3lame;../mp3x;../frontend;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;LAMEPARSE;WIN32;_CONSOLE;HAVE_MPGLIB;LAMESNDFILE;BRHIST;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;_APP=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)mp3rtp.exe</OutputFile>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;gdk-1.3.lib;gtk-1.3.lib;glib-1.3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)mp3x.exe</OutputFile>
+      <AdditionalLibraryDirectories>./WinGtk/src/gtk+/gtk;./WinGtk/src/gtk+/gdk;./WinGtk/src/glib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>..\obj\ReleaseSSE2\frontend/mp3x.map</MapFileName>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -167,28 +181,33 @@
     <ClCompile Include="..\frontend\brhist.c" />
     <ClCompile Include="..\frontend\console.c" />
     <ClCompile Include="..\frontend\get_audio.c" />
+    <ClCompile Include="..\frontend\gpkplotting.c" />
+    <ClCompile Include="..\frontend\gtkanal.c" />
     <ClCompile Include="..\frontend\lametime.c" />
     <ClCompile Include="..\frontend\main.c" />
-    <ClCompile Include="..\frontend\mp3rtp.c" />
+    <ClCompile Include="..\frontend\mp3x.c" />
     <ClCompile Include="..\frontend\parse.c" />
-    <ClCompile Include="..\frontend\rtp.c" />
     <ClCompile Include="..\frontend\timestatus.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\configMS.h" />
     <ClInclude Include="..\frontend\brhist.h" />
     <ClInclude Include="..\frontend\console.h" />
     <ClInclude Include="..\frontend\get_audio.h" />
+    <ClInclude Include="..\frontend\gpkplotting.h" />
     <ClInclude Include="..\frontend\lametime.h" />
     <ClInclude Include="..\frontend\main.h" />
     <ClInclude Include="..\frontend\parse.h" />
-    <ClInclude Include="..\frontend\rtp.h" />
     <ClInclude Include="..\frontend\timestatus.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\libmp3lame\lame.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="vc9_libmp3lame.vcxproj">
+    <None Include="..\README.WINGTK" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="libmp3lame.vcxproj">
       <Project>{20536101-3b0e-43ef-94f9-080d595dac57}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
