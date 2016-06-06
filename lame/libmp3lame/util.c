@@ -622,7 +622,7 @@ fill_buffer_resample(lame_internal_flags * gfc,
     /* how many samples of input data were used:  */
     *num_used = Min(len, filter_l + j - filter_l / 2);
 
-    /* adjust our input time counter.  Incriment by the number of samples used,
+    /* adjust our input time counter.  Increment by the number of samples used,
      * then normalize so that next output sample is at time 0, next
      * input buffer is at time itime[ch] */
     esv->itime[ch] += *num_used - k * resample_ratio;
