@@ -41,7 +41,18 @@
 
 #include "version.h"    /* macros of version numbers */
 
+#ifndef __VERSION__
+#define __VERSION__ "Unknown"
 
+#ifdef _MSC_FULL_VER
+#undef __VERSION__
+#ifdef MS_PLATFORM_TOOLSET
+#define __VERSION__ "MSC" STR(_MSC_FULL_VER) "/" STR(MS_PLATFORM_TOOLSET)
+#else
+#define __VERSION__ "MSC" STR(_MSC_FULL_VER)
+#endif
+#endif
+#endif
 
 
 
@@ -58,17 +69,17 @@ get_lame_version(void)
 #if   LAME_ALPHA_VERSION
     static /*@observer@ */ const char *const str =
         STR(LAME_MAJOR_VERSION) "." STR(LAME_MINOR_VERSION) " "
-        "(alpha " STR(LAME_PATCH_VERSION) ", " __DATE__ " " __TIME__ ")";
+        "(alpha " STR(LAME_PATCH_VERSION) ", " __DATE__ " " __TIME__ " " __VERSION__ ")";
 #elif LAME_BETA_VERSION
     static /*@observer@ */ const char *const str =
         STR(LAME_MAJOR_VERSION) "." STR(LAME_MINOR_VERSION) " "
-        "(beta " STR(LAME_PATCH_VERSION) ", " __DATE__ ")";
+        "(beta " STR(LAME_PATCH_VERSION) ", " __DATE__ " " __VERSION__")";
 #elif LAME_RELEASE_VERSION && (LAME_PATCH_VERSION > 0)
     static /*@observer@ */ const char *const str =
-        STR(LAME_MAJOR_VERSION) "." STR(LAME_MINOR_VERSION) "." STR(LAME_PATCH_VERSION);
+        STR(LAME_MAJOR_VERSION) "." STR(LAME_MINOR_VERSION) "." STR(LAME_PATCH_VERSION) " (" __VERSION__ ")";
 #else
     static /*@observer@ */ const char *const str =
-        STR(LAME_MAJOR_VERSION) "." STR(LAME_MINOR_VERSION);
+        STR(LAME_MAJOR_VERSION) "." STR(LAME_MINOR_VERSION) " (" __VERSION__ ")";
 #endif
 
     return str;
