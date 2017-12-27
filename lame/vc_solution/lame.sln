@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lame_enc_dll", "lame_dll.vcxproj", "{0E4820D3-DBE3-477A-910B-7C020D6066D1}"
 EndProject
@@ -18,6 +18,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{AB1A57ED-55CB-4CCD-9157-80ED5E65CE54}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lame", "lame.vcxproj", "{633499B4-840A-4C43-8865-6A7DDA0B5238}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{82D54E9F-C3DB-4AE6-93B0-578FBA868D0B}"
+	ProjectSection(SolutionItems) = preProject
+		build_2017.bat = build_2017.bat
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -176,5 +181,8 @@ Global
 		{D169F06E-6607-4A9F-A075-2335717B9AB5} = {AB1A57ED-55CB-4CCD-9157-80ED5E65CE54}
 		{2FE9808B-2B03-48D9-94FC-6C907D39E2AC} = {AB1A57ED-55CB-4CCD-9157-80ED5E65CE54}
 		{633499B4-840A-4C43-8865-6A7DDA0B5238} = {AB1A57ED-55CB-4CCD-9157-80ED5E65CE54}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {58E65EEF-05A6-4235-BECE-3C9A16F56098}
 	EndGlobalSection
 EndGlobal
