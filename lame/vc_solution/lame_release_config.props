@@ -2,9 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Architecture)'!='' And '$(Architecture)'!='none'">
-    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='sse' And '$(Platform)'=='Win32'">StreamingSIMDExtensions</LameEnhancedInstructionSet>
-    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='sse2' And '$(Platform)'=='Win32'">StreamingSIMDExtensions2</LameEnhancedInstructionSet>
+  <PropertyGroup Condition="'$(Platform)' == 'Win32'">
+    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='' Or '$(Architecture)'=='none'">NoExtensions</LameEnhancedInstructionSet>
+    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='sse'">StreamingSIMDExtensions</LameEnhancedInstructionSet>
+    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='sse2'">StreamingSIMDExtensions2</LameEnhancedInstructionSet>
+  </PropertyGroup>
+  <PropertyGroup>
     <LameEnhancedInstructionSet Condition="'$(Architecture)'=='avx'">AdvancedVectorExtensions</LameEnhancedInstructionSet>
     <LameEnhancedInstructionSet Condition="'$(Architecture)'=='avx2'">AdvancedVectorExtensions2</LameEnhancedInstructionSet>
   </PropertyGroup>
