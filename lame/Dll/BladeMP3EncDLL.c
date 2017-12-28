@@ -219,7 +219,7 @@ static void PresetOptions( lame_global_flags *gfp, LONG myPreset )
 }
 
 
-__declspec(dllexport) BE_ERR	beInitStream(PBE_CONFIG pbeConfig, PDWORD dwSamples, PDWORD dwBufferSize, PHBE_STREAM phbeStream)
+BLADE_DLLEXPORT BE_ERR	beInitStream(PBE_CONFIG pbeConfig, PDWORD dwSamples, PDWORD dwBufferSize, PHBE_STREAM phbeStream)
 {
     int actual_bitrate;
     //2001-12-18
@@ -553,7 +553,7 @@ __declspec(dllexport) BE_ERR	beInitStream(PBE_CONFIG pbeConfig, PDWORD dwSamples
 
 
 
-__declspec(dllexport) BE_ERR	beFlushNoGap(HBE_STREAM hbeStream, PBYTE pOutput, PDWORD pdwOutput)
+BLADE_DLLEXPORT BE_ERR	beFlushNoGap(HBE_STREAM hbeStream, PBYTE pOutput, PDWORD pdwOutput)
 {
     int nOutputSamples = 0;
 
@@ -575,7 +575,7 @@ __declspec(dllexport) BE_ERR	beFlushNoGap(HBE_STREAM hbeStream, PBYTE pOutput, P
     return BE_ERR_SUCCESSFUL;
 }
 
-__declspec(dllexport) BE_ERR	beDeinitStream(HBE_STREAM hbeStream, PBYTE pOutput, PDWORD pdwOutput)
+BLADE_DLLEXPORT BE_ERR	beDeinitStream(HBE_STREAM hbeStream, PBYTE pOutput, PDWORD pdwOutput)
 {
     int nOutputSamples = 0;
 
@@ -597,7 +597,7 @@ __declspec(dllexport) BE_ERR	beDeinitStream(HBE_STREAM hbeStream, PBYTE pOutput,
 }
 
 
-__declspec(dllexport) BE_ERR	beCloseStream(HBE_STREAM hbeStream)
+BLADE_DLLEXPORT BE_ERR	beCloseStream(HBE_STREAM hbeStream)
 {
     lame_global_flags*	gfp = (lame_global_flags*)hbeStream;
 
@@ -620,7 +620,7 @@ __declspec(dllexport) BE_ERR	beCloseStream(HBE_STREAM hbeStream)
 
 
 
-__declspec(dllexport) VOID		beVersion(PBE_VERSION pbeVersion)
+BLADE_DLLEXPORT VOID		beVersion(PBE_VERSION pbeVersion)
 {
     // DLL Release date
     char lpszDate[20]	= { '\0', };
@@ -681,7 +681,7 @@ __declspec(dllexport) VOID		beVersion(PBE_VERSION pbeVersion)
     strcpy( pbeVersion->zHomepage, "http://www.mp3dev.org/" );
 }
 
-__declspec(dllexport) BE_ERR	beEncodeChunk(HBE_STREAM hbeStream, DWORD nSamples, 
+BLADE_DLLEXPORT BE_ERR	beEncodeChunk(HBE_STREAM hbeStream, DWORD nSamples,
                                               PSHORT pSamples, PBYTE pOutput, PDWORD pdwOutput)
 {
     // Encode it
@@ -726,7 +726,7 @@ __declspec(dllexport) BE_ERR	beEncodeChunk(HBE_STREAM hbeStream, DWORD nSamples,
 
 // accept floating point audio samples, scaled to the range of a signed 16-bit
 //  integer (within +/- 32768), in non-interleaved channels  -- DSPguru, jd
-__declspec(dllexport) BE_ERR	beEncodeChunkFloatS16NI(HBE_STREAM hbeStream, DWORD nSamples, 
+BLADE_DLLEXPORT BE_ERR	beEncodeChunkFloatS16NI(HBE_STREAM hbeStream, DWORD nSamples,
                                                         PFLOAT buffer_l, PFLOAT buffer_r, PBYTE pOutput, PDWORD pdwOutput)
 {
     int nOutputSamples;
@@ -865,7 +865,7 @@ updateLameTagFrame(lame_global_flags* gfp, FILE* fpStream)
     return BE_ERR_SUCCESSFUL;
 }
 
-__declspec(dllexport) BE_ERR beWriteInfoTag( HBE_STREAM hbeStream,
+BLADE_DLLEXPORT BE_ERR beWriteInfoTag( HBE_STREAM hbeStream,
                                             LPCSTR lpszFileName )
 {
     FILE* fpStream	= NULL;
@@ -910,7 +910,7 @@ __declspec(dllexport) BE_ERR beWriteInfoTag( HBE_STREAM hbeStream,
 }
 
 // for backwards compatiblity
-__declspec(dllexport) BE_ERR beWriteVBRHeader(LPCSTR lpszFileName)
+BLADE_DLLEXPORT BE_ERR beWriteVBRHeader(LPCSTR lpszFileName)
 {
     return beWriteInfoTag( (HBE_STREAM)gfp_save, lpszFileName );
 }

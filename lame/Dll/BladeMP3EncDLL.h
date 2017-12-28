@@ -255,17 +255,22 @@ typedef BE_ERR	(*BEWRITEINFOTAG)			(HBE_STREAM, LPCSTR );
 
 #else
 
-__declspec(dllexport) BE_ERR	beInitStream(PBE_CONFIG pbeConfig, PDWORD dwSamples, PDWORD dwBufferSize, PHBE_STREAM phbeStream);
-__declspec(dllexport) BE_ERR	beEncodeChunk(HBE_STREAM hbeStream, DWORD nSamples, PSHORT pSamples, PBYTE pOutput, PDWORD pdwOutput);
+// __declspec(dllexport) shouldn't be used for symbols in the .def file
+#ifndef BLADE_DLLEXPORT
+#define BLADE_DLLEXPORT
+#endif
+
+BLADE_DLLEXPORT BE_ERR	beInitStream(PBE_CONFIG pbeConfig, PDWORD dwSamples, PDWORD dwBufferSize, PHBE_STREAM phbeStream);
+BLADE_DLLEXPORT BE_ERR	beEncodeChunk(HBE_STREAM hbeStream, DWORD nSamples, PSHORT pSamples, PBYTE pOutput, PDWORD pdwOutput);
 
 // added for floating point audio  -- DSPguru, jd
-__declspec(dllexport) BE_ERR	beEncodeChunkFloatS16NI(HBE_STREAM hbeStream, DWORD nSamples, PFLOAT buffer_l, PFLOAT buffer_r, PBYTE pOutput, PDWORD pdwOutput);
-__declspec(dllexport) BE_ERR	beDeinitStream(HBE_STREAM hbeStream, PBYTE pOutput, PDWORD pdwOutput);
-__declspec(dllexport) BE_ERR	beCloseStream(HBE_STREAM hbeStream);
-__declspec(dllexport) VOID	beVersion(PBE_VERSION pbeVersion);
-__declspec(dllexport) BE_ERR	beWriteVBRHeader(LPCSTR lpszFileName);
-__declspec(dllexport) BE_ERR	beFlushNoGap(HBE_STREAM hbeStream, PBYTE pOutput, PDWORD pdwOutput);
-__declspec(dllexport) BE_ERR	beWriteInfoTag( HBE_STREAM hbeStream, LPCSTR lpszFileName );
+BLADE_DLLEXPORT BE_ERR	beEncodeChunkFloatS16NI(HBE_STREAM hbeStream, DWORD nSamples, PFLOAT buffer_l, PFLOAT buffer_r, PBYTE pOutput, PDWORD pdwOutput);
+BLADE_DLLEXPORT BE_ERR	beDeinitStream(HBE_STREAM hbeStream, PBYTE pOutput, PDWORD pdwOutput);
+BLADE_DLLEXPORT BE_ERR	beCloseStream(HBE_STREAM hbeStream);
+BLADE_DLLEXPORT VOID	beVersion(PBE_VERSION pbeVersion);
+BLADE_DLLEXPORT BE_ERR	beWriteVBRHeader(LPCSTR lpszFileName);
+BLADE_DLLEXPORT BE_ERR	beFlushNoGap(HBE_STREAM hbeStream, PBYTE pOutput, PDWORD pdwOutput);
+BLADE_DLLEXPORT BE_ERR	beWriteInfoTag( HBE_STREAM hbeStream, LPCSTR lpszFileName );
 
 #endif
 
