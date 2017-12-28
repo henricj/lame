@@ -21,6 +21,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lame", "lame.vcxproj", "{63
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{82D54E9F-C3DB-4AE6-93B0-578FBA868D0B}"
 	ProjectSection(SolutionItems) = preProject
+		build.proj = build.proj
 		build_2017.bat = build_2017.bat
 	EndProjectSection
 EndProject

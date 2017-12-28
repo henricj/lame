@@ -1,0 +1,23 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+    DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectProperties>Configuration=$(Configuration);PreferredToolsetArchitecture=x64</ProjectProperties>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReferences Include="$(MsBuildThisFileDirectory)lame.sln">
+      <Properties>$(ProjectProperties);Platform=x64</Properties>
+    </ProjectReferences>
+    <ProjectReferences Include="$(MsBuildThisFileDirectory)lame.sln">
+      <Properties>$(ProjectProperties);Platform=Win32</Properties>
+    </ProjectReferences>
+  </ItemGroup>
+  <Target Name="Rebuild">
+    <MSBuild Projects="@(ProjectReferences)" Targets="Rebuild" BuildInParallel="true" />
+  </Target>
+  <Target Name="Clean">
+    <MSBuild Projects="@(ProjectReferences)" Targets="Clean" BuildInParallel="true" />
+  </Target>
+  <Target Name="Build">
+    <MSBuild Projects="@(ProjectReferences)" Targets="Build" BuildInParallel="true" />
+  </Target>
+</Project>
