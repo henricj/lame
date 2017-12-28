@@ -6,7 +6,7 @@
   <ItemGroup>
     <Project Include="$(MsBuildThisFileDirectory)lame.sln"></Project>
     <Configuration Include="Static Release" />
-     <Platform Include="x64;Win32" />
+    <Platform Include="x64;Win32" />
     <Architecture Include="none;sse2;avx;avx2" />
   </ItemGroup>
   <Target Name="CreateProjectReferences">
@@ -35,6 +35,15 @@
       <ProjectReferences_Optimize Include="@(ProjectReferences)">
         <AdditionalProperties>WholeProgramOptimization=PGOptimize,LinkTimeCodeGeneration=PGOptimization</AdditionalProperties>
       </ProjectReferences_Optimize>
+
+      <LibMp3Lame Include="../../build/bin/%(ProjectReferences.Platform)/%(ProjectReferences.Configuration)-%(ProjectReferences.Architecture)/libmp3lame.dll"
+               Condition="'%(ProjectReferences.Architecture)' != 'none' And '%(ProjectReferences.Architecture)' != ''">
+        <Destination>../../build/artifacts/%(ProjectReferences.Configuration)/%(ProjectReferences.Platform)/%(ProjectReferences.Architecture)/libmp3lame.dll</Destination>
+      </LibMp3Lame>
+      <LibMp3Lame Include="../../build/bin/%(ProjectReferences.Platform)/%(ProjectReferences.Configuration)/libmp3lame.dll"
+               Condition="'%(ProjectReferences.Architecture)' == 'none' Or '%(ProjectReferences.Architecture)' == ''">
+        <Destination>../../build/artifacts/%(ProjectReferences.Configuration)/%(ProjectReferences.Platform)/libmp3lame.dll</Destination>
+      </LibMp3Lame>
     </ItemGroup>
   </Target>
   <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
@@ -48,5 +57,8 @@
     <MSBuild Projects="@(ProjectReferences_LTCG)" Targets="Build" BuildInParallel="true" />
     <!-- <MSBuild Projects="@(ProjectReferences_Instrument)" Targets="Build" BuildInParallel="true" />
     <MSBuild Projects="@(ProjectReferences_Optimize)" Targets="Build" BuildInParallel="true" /> -->
+  </Target>
+  <Target Name="CopyArtifacts" AfterTargets="Build">
+    <Copy SourceFiles="@(LibMp3Lame)" DestinationFiles="%(LibMp3Lame.Destination)" UseHardlinksIfPossible="true" />
   </Target>
 </Project>

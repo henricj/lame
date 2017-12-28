@@ -5,14 +5,6 @@ build:
   project: lame/vc_solution/build.proj
   parallel: true
   verbosity: minimal
-after_build:
-- cmd: >-
-    md artifacts &
-    md artifacts\lame &
-    md artifacts\lame\x64 &
-    md artifacts\lame\x86 &
-    copy "lame\output\x64\%CONFIGURATION%\lame_enc.dll" artifacts\lame\x64 &
-    copy "lame\output\Win32\%CONFIGURATION%\lame_enc.dll" artifacts\lame\x86
 artifacts:
-- path: artifacts
+- path: 'build\artifacts\%CONFIGURATION%'
   name: 'lame-%APPVEYOR_BUILD_VERSION%-%APPVEYOR_REPO_COMMIT%'
