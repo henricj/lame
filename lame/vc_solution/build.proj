@@ -1,23 +1,50 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
     DefaultTargets="Build">
   <PropertyGroup>
-    <ProjectProperties>Configuration=$(Configuration);PreferredToolsetArchitecture=x64</ProjectProperties>
+    <ProjectProperties>PreferredToolArchitecture=x64</ProjectProperties>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReferences Include="$(MsBuildThisFileDirectory)lame.sln">
-      <Properties>$(ProjectProperties);Platform=x64</Properties>
-    </ProjectReferences>
-    <ProjectReferences Include="$(MsBuildThisFileDirectory)lame.sln">
-      <Properties>$(ProjectProperties);Platform=Win32</Properties>
-    </ProjectReferences>
+    <Project Include="$(MsBuildThisFileDirectory)lame.sln"></Project>
+    <Configuration Include="Static Release" />
+     <Platform Include="x64;Win32" />
+    <Architecture Include="none;sse2;avx;avx2" />
   </ItemGroup>
-  <Target Name="Rebuild">
-    <MSBuild Projects="@(ProjectReferences)" Targets="Rebuild" BuildInParallel="true" />
-  </Target>
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
   <Target Name="Clean">
     <MSBuild Projects="@(ProjectReferences)" Targets="Clean" BuildInParallel="true" />
   </Target>
   <Target Name="Build">
-    <MSBuild Projects="@(ProjectReferences)" Targets="Build" BuildInParallel="true" />
+    <ItemGroup>
+      <Project_Configuration Include="@(Project)">
+        <Configuration>%(Configuration.Identity)</Configuration>
+      </Project_Configuration>
+      <Project_Platform Include="@(Project_Configuration)">
+        <Platform>%(Platform.Identity)</Platform>
+      </Project_Platform>
+      <Project_Architecture Include="@(Project_Platform)">
+        <Architecture>%(Architecture.Identity)</Architecture>
+      </Project_Architecture>
+
+      <ProjectReferences Include="@(Project_Architecture)">
+        <Properties>$(ProjectProperties);Configuration=%(Project_Architecture.Configuration);Platform=%(Project_Architecture.Platform);Architecture=%(Project_Architecture.Architecture)</Properties>
+      </ProjectReferences>
+      <ProjectReferences Remove="@(ProjectReferences)" Condition="'%(ProjectReferences.Platform)' == 'x64' AND '%(ProjectReferences.Architecture)' == 'sse2'" />
+
+      <ProjectReferences_LTCG Include="@(ProjectReferences)">
+        <AdditionalProperties>WholeProgramOptimization=true</AdditionalProperties>
+      </ProjectReferences_LTCG>
+      <ProjectReferences_Instrument Include="@(ProjectReferences)">
+        <AdditionalProperties>WholeProgramOptimization=PGInstrument</AdditionalProperties>
+      </ProjectReferences_Instrument>
+      <ProjectReferences_Optimize Include="@(ProjectReferences)">
+        <AdditionalProperties>WholeProgramOptimization=PGOptimize,LinkTimeCodeGeneration=PGOptimization</AdditionalProperties>
+      </ProjectReferences_Optimize>
+    </ItemGroup>
+    <!--<Message Text="%(ProjectReferences.Identity) C=%(ProjectReferences.Configuration) P=%(ProjectReferences.Platform) A=%(ProjectReferences.Architecture) Prop=%(ProjectReferences.Properties) AProp=%(ProjectReferences.AdditionalProperties)" />
+    <Message Text="Insturment %(ProjectReferences_Instrument.Identity) C=%(ProjectReferences_Instrument.Configuration) P=%(ProjectReferences_Instrument.Platform) A=%(ProjectReferences_Instrument.Architecture) Prop=%(ProjectReferences_Instrument.Properties) AProp=%(ProjectReferences_Instrument.AdditionalProperties)" />
+    <Message Text="Optimize %(ProjectReferences_Optimize.Identity) C=%(ProjectReferences_Optimize.Configuration) P=%(ProjectReferences_Optimize.Platform) A=%(ProjectReferences_Optimize.Architecture) Prop=%(ProjectReferences_Optimize.Properties) AProp=%(ProjectReferences_Optimize.AdditionalProperties)" />-->
+    <MSBuild Projects="@(ProjectReferences_LTCG)" Targets="Build" BuildInParallel="true" />
+    <!-- <MSBuild Projects="@(ProjectReferences_Instrument)" Targets="Build" BuildInParallel="true" />
+    <MSBuild Projects="@(ProjectReferences_Optimize)" Targets="Build" BuildInParallel="true" /> -->
   </Target>
 </Project>

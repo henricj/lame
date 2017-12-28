@@ -2,11 +2,15 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="UserMacros">
+    <LameBuildDir>$(MSBuildThisFileDirectory)..\..\build\</LameBuildDir>
+    <LamePlatCon>$(Platform)\$(Configuration)</LamePlatCon>
+    <LamePlatCon Condition="'$(Architecture)' != '' AND '$(Architecture)' != 'none'">$(LamePlatCon)-$(Architecture)</LamePlatCon>
+    <LamePreprocessorDefinitions Condition="'$(Platform)' == 'x64' OR ('$(Architecture)' != '' OR '$(Architecture)' != 'none')">HAVE_XMMINTRIN_H;MIN_ARCH_SSE</LamePreprocessorDefinitions>
+  </PropertyGroup>
   <PropertyGroup>
-    <_ProjectFileVersion>14.0.25123.0</_ProjectFileVersion>
-    <OutDir>$(SolutionDir)..\output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(LameBuildDir)bin\$(LamePlatCon)\</OutDir>
+    <IntDir>$(LameBuildDir)obj\$(LamePlatCon)\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup>
@@ -14,7 +18,7 @@
       <OutputFile>$(IntDir)$(ProjectName).bsc</OutputFile>
     </Bscmake>
     <ClCompile>
-      <PreprocessorDefinitions>MS_PLATFORM_TOOLSET=$(PlatformToolset);_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MS_PLATFORM_TOOLSET=$(PlatformToolset);_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATED;$(LamePreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>

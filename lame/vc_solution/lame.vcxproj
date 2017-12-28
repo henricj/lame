@@ -37,8 +37,11 @@
     <ClCompile Include="..\frontend\timestatus.c" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="libmp3lame.vcxproj">
+    <ProjectReference Include="libmp3lame-static.vcxproj">
       <Project>{20536101-3b0e-43ef-94f9-080d595dac57}</Project>
+    </ProjectReference>
+    <ProjectReference Include="libmpghip-static.vcxproj">
+      <Project>{e2dab91a-8248-4625-8a85-2c2c2a390dd8}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">

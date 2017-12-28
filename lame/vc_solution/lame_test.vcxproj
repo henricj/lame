@@ -223,7 +223,6 @@
   <ItemGroup>
     <ProjectReference Include="libmp3lame_dll.vcxproj">
       <Project>{92bd50aa-04d6-4fbf-ace1-468faf6778f2}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

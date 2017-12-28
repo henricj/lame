@@ -156,7 +156,6 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="lame_config.props" />
-    <Import Project="arch_x87.props" />
     <Import Project="lame_release_config.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
@@ -169,7 +168,6 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="lame_config.props" />
-    <Import Project="arch_x87.props" />
     <Import Project="lame_release_config.props" />
     <Import Project="lame_release64_config.props" />
   </ImportGroup>
@@ -208,9 +206,7 @@
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <Link>
-      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
-      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
@@ -236,9 +232,7 @@
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <Link>
-      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
-      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -264,9 +258,7 @@
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <Link>
-      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
-      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
@@ -289,13 +281,9 @@
       <PreprocessorDefinitions>_VC80_UPGRADE=0x0600;_DLL=$(TargetFileName);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
     </ResourceCompile>
-    <ProjectReference>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
+    <ProjectReference />
     <Link>
-      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
-      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
@@ -321,9 +309,7 @@
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <Link>
-      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
-      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNASM|x64'">
@@ -349,9 +335,7 @@
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <Link>
-      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
-      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -374,10 +358,8 @@
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <Link>
-      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -401,10 +383,8 @@
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <Link>
-      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|Win32'">
@@ -426,9 +406,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
-      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|x64'">
@@ -451,9 +429,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)libmp3lame.dll</OutputFile>
       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
-      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -474,8 +450,11 @@
     <ResourceCompile Include="..\libmp3lame\lame.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="libmp3lame.vcxproj">
+    <ProjectReference Include="libmp3lame-static.vcxproj">
       <Project>{20536101-3b0e-43ef-94f9-080d595dac57}</Project>
+    </ProjectReference>
+    <ProjectReference Include="libmpghip-static.vcxproj">
+      <Project>{e2dab91a-8248-4625-8a85-2c2c2a390dd8}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

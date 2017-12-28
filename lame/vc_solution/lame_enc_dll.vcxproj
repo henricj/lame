@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>lame_enc_dll</ProjectName>
+    <ProjectName>lame_enc</ProjectName>
     <ProjectGuid>{0E4820D3-DBE3-477A-910B-7C020D6066D1}</ProjectGuid>
     <RootNamespace>lame_enc_dll</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
@@ -112,26 +112,18 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>lame_enc</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>lame_enc</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>lame_enc</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>lame_enc</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>lame_enc</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetName>lame_enc</TargetName>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -144,7 +136,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_BLADEDLL;WIN32;_DEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -156,7 +148,7 @@
     </ResourceCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>$(ProjectDir)..\include\lame.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>..\Dll\BladeMP3EncDLL.def</ModuleDefinitionFile>
       <AdditionalDependencies>kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -172,7 +164,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_BLADEDLL;WIN32;_DEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -184,7 +176,7 @@
     </ResourceCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>$(ProjectDir)..\include\lame.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>..\Dll\BladeMP3EncDLL.def</ModuleDefinitionFile>
       <AdditionalDependencies>kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -200,7 +192,7 @@
     <ClCompile>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_BLADEDLL;WIN32;NDEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -210,7 +202,7 @@
       <Culture>0x040c</Culture>
     </ResourceCompile>
     <Link>
-      <ModuleDefinitionFile>$(ProjectDir)..\include\lame.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>..\Dll\BladeMP3EncDLL.def</ModuleDefinitionFile>
       <AdditionalDependencies>kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -227,7 +219,7 @@
     <ClCompile>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_BLADEDLL;WIN32;NDEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -237,7 +229,7 @@
       <Culture>0x040c</Culture>
     </ResourceCompile>
     <Link>
-      <ModuleDefinitionFile>$(ProjectDir)..\include\lame.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>..\Dll\BladeMP3EncDLL.def</ModuleDefinitionFile>
       <AdditionalDependencies>kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -253,7 +245,7 @@
     <ClCompile>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_BLADEDLL;WIN32;NDEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -263,7 +255,7 @@
       <Culture>0x040c</Culture>
     </ResourceCompile>
     <Link>
-      <ModuleDefinitionFile>$(ProjectDir)..\include\lame.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>..\Dll\BladeMP3EncDLL.def</ModuleDefinitionFile>
       <AdditionalDependencies>kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
@@ -280,7 +272,7 @@
     <ClCompile>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_BLADEDLL;WIN32;NDEBUG;_WINDOWS;_USRDLL;LAMEMP3ENCDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -290,7 +282,7 @@
       <Culture>0x040c</Culture>
     </ResourceCompile>
     <Link>
-      <ModuleDefinitionFile>$(ProjectDir)..\include\lame.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>..\Dll\BladeMP3EncDLL.def</ModuleDefinitionFile>
       <AdditionalDependencies>kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
@@ -312,10 +304,10 @@
     <ClInclude Include="..\Dll\BladeMP3EncDLL.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="libmp3lame.vcxproj">
+    <ProjectReference Include="libmp3lame-static.vcxproj">
       <Project>{20536101-3b0e-43ef-94f9-080d595dac57}</Project>
     </ProjectReference>
-    <ProjectReference Include="mpglib.vcxproj">
+    <ProjectReference Include="libmpghip-static.vcxproj">
       <Project>{e2dab91a-8248-4625-8a85-2c2c2a390dd8}</Project>
     </ProjectReference>
   </ItemGroup>
