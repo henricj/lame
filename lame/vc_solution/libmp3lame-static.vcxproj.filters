@@ -176,9 +176,4 @@
       <Filter>Asm</Filter>
     </NASM>
   </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\configMS.h">
-      <Filter>Include</Filter>
-    </CustomBuild>
-  </ItemGroup>
 </Project>
