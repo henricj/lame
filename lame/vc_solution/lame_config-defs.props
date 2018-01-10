@@ -13,7 +13,7 @@
     <LameLibOutDir>$(LameBuildDir)lib\$(LamePlatCon)\</LameLibOutDir>
     <LameBaseIntDir>$(LameBuildDir)obj\$(LamePlatCon)\$(ProjectName)\</LameBaseIntDir>
     <LameIntDir>$(LameBaseIntDir)$(ProjectName)\</LameIntDir>
-    <LamePreprocessorDefinitions Condition="'$(Platform)' == 'x64' OR ('$(Architecture)' != '' OR '$(Architecture)' != 'none')">HAVE_XMMINTRIN_H;MIN_ARCH_SSE</LamePreprocessorDefinitions>
+    <LamePreprocessorDefinitions Condition="'$(Platform)' == 'x64' OR '$(Architecture)' != 'fpu'">HAVE_XMMINTRIN_H;MIN_ARCH_SSE</LamePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(LameOutDir)</OutDir>
@@ -22,7 +22,7 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)' == 'Win32'">
-    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='none'">NoExtensions</LameEnhancedInstructionSet>
+    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='fpu'">NoExtensions</LameEnhancedInstructionSet>
     <LameEnhancedInstructionSet Condition="'$(Architecture)'=='sse'">StreamingSIMDExtensions</LameEnhancedInstructionSet>
     <LameEnhancedInstructionSet Condition="'$(Architecture)'=='sse2'">StreamingSIMDExtensions2</LameEnhancedInstructionSet>
   </PropertyGroup>

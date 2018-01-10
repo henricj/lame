@@ -1,13 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
-    DefaultTargets="Build">
+    DefaultTargets="Build" ToolsVersion="15.0">
   <PropertyGroup>
     <ProjectProperties>PreferredToolArchitecture=x64</ProjectProperties>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
+  <Import Project="lame_config-defs.props" />
   <ItemGroup>
     <Project Include="$(MsBuildThisFileDirectory)lame.sln"></Project>
     <Configuration Include="Static Release" />
     <Platform Include="x64;Win32" />
-    <Architecture Include="none;sse2;avx;avx2" />
+    <Architecture Include="default;fpu;sse;sse2;avx;avx2" />
   </ItemGroup>
   <Target Name="CreateProjectReferences">
     <ItemGroup>
@@ -23,8 +26,11 @@
 
       <ProjectReferences Include="@(Project_Architecture)">
         <Properties>$(ProjectProperties);Configuration=%(Project_Architecture.Configuration);Platform=%(Project_Architecture.Platform);Architecture=%(Project_Architecture.Architecture)</Properties>
+	<LameOutDir Condition="'%(Project_Architecture.Architecture)'!=''">$(LameBuildDir)bin\$(PlatformToolset)_%(Project_Architecture.Architecture)\%(Project_Architecture.Platform)\%(Project_Architecture.Configuration)\</LameOutDir>
+	<LameOutDir Condition="'%(Project_Architecture.Architecture)'==''">$(LameBuildDir)bin\$(PlatformToolset)\%(Project_Architecture.Platform)\%(Project_Architecture.Configuration)\</LameOutDir>
       </ProjectReferences>
-      <ProjectReferences Remove="@(ProjectReferences)" Condition="'%(ProjectReferences.Platform)' == 'x64' AND '%(ProjectReferences.Architecture)' == 'sse2'" />
+      <ProjectReferences Remove="@(ProjectReferences)" Condition="'%(ProjectReferences.Platform)' == 'x64' AND ('%(ProjectReferences.Architecture)' == 'sse2' OR '%(ProjectReferences.Architecture)' == 'sse' OR '%(ProjectReferences.Architecture)' == 'fpu')" />
+      <ProjectReferences Remove="@(ProjectReferences)" Condition="'%(ProjectReferences.Platform)' == 'Win32' AND '%(ProjectReferences.Architecture)' == 'default'" />
 
       <ProjectReferences_LTCG Include="@(ProjectReferences)">
         <AdditionalProperties>WholeProgramOptimization=true</AdditionalProperties>
@@ -36,13 +42,13 @@
         <AdditionalProperties>WholeProgramOptimization=PGOptimize,LinkTimeCodeGeneration=PGOptimization</AdditionalProperties>
       </ProjectReferences_Optimize>
 
-      <LibMp3Lame Include="../../build/bin/%(ProjectReferences.Platform)/%(ProjectReferences.Configuration)-%(ProjectReferences.Architecture)/libmp3lame.dll"
-               Condition="'%(ProjectReferences.Architecture)' != 'none' And '%(ProjectReferences.Architecture)' != ''">
-        <Destination>../../build/artifacts/%(ProjectReferences.Configuration)/%(ProjectReferences.Platform)/%(ProjectReferences.Architecture)/libmp3lame.dll</Destination>
+      <LibMp3Lame Include="%(ProjectReferences.LameOutDir)libmp3lame.dll"
+               Condition="'%(ProjectReferences.Architecture)' != ''">
+        <Destination>$(LameBuildDir)artifacts/%(ProjectReferences.Configuration)/%(ProjectReferences.Platform)/%(ProjectReferences.Architecture)/libmp3lame.dll</Destination>
       </LibMp3Lame>
-      <LibMp3Lame Include="../../build/bin/%(ProjectReferences.Platform)/%(ProjectReferences.Configuration)/libmp3lame.dll"
-               Condition="'%(ProjectReferences.Architecture)' == 'none' Or '%(ProjectReferences.Architecture)' == ''">
-        <Destination>../../build/artifacts/%(ProjectReferences.Configuration)/%(ProjectReferences.Platform)/libmp3lame.dll</Destination>
+      <LibMp3Lame Include="%(ProjectReferences.LameOutDir)libmp3lame.dll"
+               Condition="'%(ProjectReferences.Architecture)' == ''">
+        <Destination>$(LameBuildDir)artifacts/%(ProjectReferences.Configuration)/%(ProjectReferences.Platform)/libmp3lame.dll</Destination>
       </LibMp3Lame>
     </ItemGroup>
   </Target>
@@ -60,13 +66,13 @@
   </Target>
   <Target Name="Build" DependsOnTargets="CreateProjectReferences;CopySetup">
     <!--<Message Text="%(ProjectReferences.Identity) C=%(ProjectReferences.Configuration) P=%(ProjectReferences.Platform) A=%(ProjectReferences.Architecture) Prop=%(ProjectReferences.Properties) AProp=%(ProjectReferences.AdditionalProperties)" />
-    <Message Text="Insturment %(ProjectReferences_Instrument.Identity) C=%(ProjectReferences_Instrument.Configuration) P=%(ProjectReferences_Instrument.Platform) A=%(ProjectReferences_Instrument.Architecture) Prop=%(ProjectReferences_Instrument.Properties) AProp=%(ProjectReferences_Instrument.AdditionalProperties)" />
+    <Message Text="Instrument %(ProjectReferences_Instrument.Identity) C=%(ProjectReferences_Instrument.Configuration) P=%(ProjectReferences_Instrument.Platform) A=%(ProjectReferences_Instrument.Architecture) Prop=%(ProjectReferences_Instrument.Properties) AProp=%(ProjectReferences_Instrument.AdditionalProperties)" />
     <Message Text="Optimize %(ProjectReferences_Optimize.Identity) C=%(ProjectReferences_Optimize.Configuration) P=%(ProjectReferences_Optimize.Platform) A=%(ProjectReferences_Optimize.Architecture) Prop=%(ProjectReferences_Optimize.Properties) AProp=%(ProjectReferences_Optimize.AdditionalProperties)" />-->
-    <MSBuild Projects="@(ProjectReferences_LTCG)" Targets="Build" BuildInParallel="true" />
+    <MSBuild Projects="@(ProjectReferences_LTCG)" Targets="libmp3lame" BuildInParallel="true" />
     <!-- <MSBuild Projects="@(ProjectReferences_Instrument)" Targets="Build" BuildInParallel="true" />
     <MSBuild Projects="@(ProjectReferences_Optimize)" Targets="Build" BuildInParallel="true" /> -->
   </Target>
-  <Target Name="CopyArtifacts" AfterTargets="Build">
-    <Copy SourceFiles="@(LibMp3Lame)" DestinationFiles="%(LibMp3Lame.Destination)" UseHardlinksIfPossible="true" />
+  <Target Name="CopyArtifacts" DependsOnTargets="BuildLame">
+    <Copy SourceFiles="@(LibMp3Lame)" DestinationFiles="%(LibMp3Lame.Destination)" />
   </Target>
 </Project>
