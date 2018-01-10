@@ -3,13 +3,12 @@
   <ImportGroup Label="PropertySheets">
   </ImportGroup>
   <PropertyGroup Condition="'$(LameBuild)'==''">
-    <LamePlatformToolset Condition="'LamePlatformToolset'==''">v141</LamePlatformToolset>
-    <LameBuild>$(LamePlatformToolset)</LameBuild>
+    <LameBuild>$(PlatformToolset)</LameBuild>
     <LameBuild Condition="'$(Architecture)'!=''">$(LameBuild)_$(Architecture)</LameBuild>
   </PropertyGroup>
   <PropertyGroup Label="UserMacros">
     <LameBuildDir Condition="'$(LameBuildDir)'==''">$(MSBuildThisFileDirectory)..\..\build\</LameBuildDir>
-    <LamePlatCon>$(LamePlatformToolset)\$(Platform)\$(Configuration)</LamePlatCon>
+    <LamePlatCon>$(LameBuild)\$(Platform)\$(Configuration)</LamePlatCon>
     <LameOutDir>$(LameBuildDir)bin\$(LamePlatCon)\</LameOutDir>
     <LameLibOutDir>$(LameBuildDir)lib\$(LamePlatCon)\</LameLibOutDir>
     <LameBaseIntDir>$(LameBuildDir)obj\$(LamePlatCon)\$(ProjectName)\</LameBaseIntDir>
