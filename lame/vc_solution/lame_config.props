@@ -2,16 +2,34 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
   </ImportGroup>
+  <PropertyGroup Condition="'$(LameBuild)'==''">
+    <LamePlatformToolset Condition="'LamePlatformToolset'==''">v141</LamePlatformToolset>
+    <LameBuild>$(LamePlatformToolset)</LameBuild>
+    <LameBuild Condition="'$(Architecture)'!=''">$(LameBuild)_$(Architecture)</LameBuild>
+  </PropertyGroup>
   <PropertyGroup Label="UserMacros">
-    <LameBuildDir>$(MSBuildThisFileDirectory)..\..\build\</LameBuildDir>
-    <LamePlatCon>$(Platform)\$(Configuration)</LamePlatCon>
-    <LamePlatCon Condition="'$(Architecture)' != '' AND '$(Architecture)' != 'none'">$(LamePlatCon)-$(Architecture)</LamePlatCon>
-    <LamePreprocessorDefinitions Condition="'$(Platform)' == 'x64' OR ('$(Architecture)' != '' OR '$(Architecture)' != 'none')">HAVE_XMMINTRIN_H;MIN_ARCH_SSE</LamePreprocessorDefinitions>
+    <LameBuildDir Condition="'$(LameBuildDir)'==''">$(MSBuildThisFileDirectory)..\..\build\</LameBuildDir>
+    <LamePlatCon>$(LamePlatformToolset)\$(Platform)\$(Configuration)</LamePlatCon>
+    <LameOutDir>$(LameBuildDir)bin\$(LamePlatCon)\</LameOutDir>
+    <LameLibOutDir>$(LameBuildDir)lib\$(LamePlatCon)\</LameLibOutDir>
+    <LameBaseIntDir>$(LameBuildDir)obj\$(LamePlatCon)\$(ProjectName)\</LameBaseIntDir>
+    <LameIntDir>$(LameBaseIntDir)$(ProjectName)\</LameIntDir>
+    <LamePreprocessorDefinitions Condition="'$(Platform)' == 'x64' OR ('$(Platform)' == 'Win32' AND ('$(Architecture)' != '' OR '$(Architecture)' != 'none'))">HAVE_XMMINTRIN_H;MIN_ARCH_SSE</LamePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup>
-    <OutDir>$(LameBuildDir)bin\$(LamePlatCon)\</OutDir>
-    <IntDir>$(LameBuildDir)obj\$(LamePlatCon)\$(ProjectName)\</IntDir>
+    <OutDir>$(LameOutDir)</OutDir>
+    <OutDir Condition="'$(ConfigurationType)'=='StaticLibrary'">$(LameLibOutDir)</OutDir>
+    <IntDir>$(LameIntDir)</IntDir>
     <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'Win32'">
+    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='none'">NoExtensions</LameEnhancedInstructionSet>
+    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='sse'">StreamingSIMDExtensions</LameEnhancedInstructionSet>
+    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='sse2'">StreamingSIMDExtensions2</LameEnhancedInstructionSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='avx'">AdvancedVectorExtensions</LameEnhancedInstructionSet>
+    <LameEnhancedInstructionSet Condition="'$(Architecture)'=='avx2'">AdvancedVectorExtensions2</LameEnhancedInstructionSet>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Bscmake>
@@ -28,8 +46,10 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MinimalRebuild>false</MinimalRebuild>
+      <EnableEnhancedInstructionSet Condition="'$(LameEnhancedInstructionSet)'!=''">$(LameEnhancedInstructionSet)</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
