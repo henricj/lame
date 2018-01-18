@@ -18,16 +18,16 @@
 // Boston, MA 02111-1307, USA.
 
 #include <lame.h>
-#include <wchar.h>
-#include <stdlib.h>
-#include <assert.h>
+#include <cwchar>
+#include <cstdlib>
+#include <cassert>
 
 #include <atomic>
 #include <chrono>
 #include <memory>
 #include <random>
 
-class PcmGenerator
+class PcmGenerator final
 {
   std::unique_ptr<float[]> m_buffer_ch0;
   std::unique_ptr<float[]> m_buffer_ch1;
@@ -45,7 +45,7 @@ class PcmGenerator
 
     for (decltype(now_count) i = 0; i < now_count; ++i)
     {
-      buffer.push_back(static_cast<output::value_type>(now));
+      buffer.push_back(static_cast<typename output::value_type>(now));
       now >>= 8 * sizeof(output::value_type);
     }
   }
@@ -55,8 +55,11 @@ class PcmGenerator
     std::vector<std::seed_seq::result_type> buffer;
     std::random_device rd;
 
-    for (auto i = 0; i < std::mt19937::state_size; ++i)
-      buffer.push_back(rd());
+    const auto count = sizeof(decltype(m_generator)) / sizeof(decltype(buffer)::value_type);
+
+    buffer.reserve(count + 8 + 3);
+
+    std::generate_n(std::back_inserter(buffer), count, [&rd]() { return rd(); });
 
     // Work-around MinGW's random_device brain damage...
     for (auto i = 0; i < 8; ++i)
@@ -90,17 +93,15 @@ public:
     advance(0);
   }
 
-  ~PcmGenerator()
-  {
-  }
+  ~PcmGenerator();
 
   float const* ch0() const { return m_buffer_ch0.get(); }
   float const* ch1() const { return m_buffer_ch1.get(); }
 
   void advance( int x ) {
-    float a = m_a;
-    float b = m_b;
-    for (int i = 0; i < m_size; ++i) {
+     auto a = m_a;
+     auto b = m_b;
+    for (auto i = 0; i < m_size; ++i) {
       a += 10;
       if (a > 32768) a = random();
       b -= 10;
@@ -113,17 +114,19 @@ public:
   }
 };
 
+PcmGenerator::~PcmGenerator() = default;
+
 class OutFile
 {
   FILE* m_file_handle;
 
 public:
   OutFile()
-    : m_file_handle(0)
+    : m_file_handle(nullptr)
   {}
 
   explicit OutFile(wchar_t const* filename)
-    : m_file_handle(0)
+    : m_file_handle(nullptr)
   {
     m_file_handle = _wfopen(filename, L"wbS");
   }
@@ -134,7 +137,7 @@ public:
   }
 
   bool isOpen() const {
-    return 0 != m_file_handle;
+    return nullptr != m_file_handle;
   }
 
   void close() {
@@ -144,11 +147,13 @@ public:
     }
   }
 
-  int seek(long offset) {
+  int seek(long offset) const
+  {
       return fseek(m_file_handle, offset, SEEK_SET);
   }
 
-  size_t write(unsigned char const* data, int n) {
+  size_t write(unsigned char const* data, int n) const
+  {
     return fwrite(data, 1, n, m_file_handle);
   }
 };
@@ -258,8 +263,8 @@ public:
       m_used = 0;
   }
 
-  unsigned char* current() { return m_data.get() + m_used; }
-  unsigned char* begin()   { return m_data.get(); }
+  unsigned char* current() const { return m_data.get() + m_used; }
+  unsigned char* begin() const { return m_data.get(); }
 };
 
 static void flushBuffer(Lame& lame, OutFile& mp3_stream, OutBuffer& mp3_stream_buffer, bool& first_write)
@@ -267,7 +272,7 @@ static void flushBuffer(Lame& lame, OutFile& mp3_stream, OutBuffer& mp3_stream_b
   if (first_write) {
     first_write = false;
 
-    int lametag_size0 = lame.getLameTag(0, 0);
+     const auto lametag_size0 = lame.getLameTag(nullptr, 0);
     wprintf(L"lametag_size0=%d\n", lametag_size0);
 
     mp3_stream.seek(lametag_size0);
@@ -323,7 +328,7 @@ void generateFile(wchar_t const* filename, size_t n)
   if (mp3_stream_buffer.used() > 0)
     flushBuffer(lame, mp3_stream, mp3_stream_buffer, first_write);
 
-  int lametag_size = lame.getLameTag(0,0);
+   const int lametag_size = lame.getLameTag(0,0);
   wprintf(L"lametag_size=%d\n",lametag_size);
 
   rc = lame.getLameTag(mp3_stream_buffer.begin(), lametag_size);
@@ -347,7 +352,7 @@ int wmain(int argc, wchar_t** argv)
     return -1;
   }
   wprintf(L"open file %ws\n", argv[1]);
-  int n = _wtoi(argv[2]);
+  const auto n = _wtoi(argv[2]);
   wprintf(L"synthesize %d samples long mp3 file\n",n);
   generateFile(argv[1], n);
   return 0;
