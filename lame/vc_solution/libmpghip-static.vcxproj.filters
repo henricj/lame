@@ -74,9 +74,4 @@
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\configMS.h">
-      <Filter>Include</Filter>
-    </CustomBuild>
-  </ItemGroup>
 </Project>

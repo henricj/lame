@@ -9,7 +9,7 @@
   <ItemGroup>
     <Project Include="$(MsBuildThisFileDirectory)lame.sln"></Project>
     <Configuration Include="Static Release" />
-    <Platform Include="x64;Win32" />
+    <Platform Include="x64;Win32;ARM64" />
     <Architecture Include="default;fpu;sse;sse2;avx;avx2" />
   </ItemGroup>
   <Target Name="CreateProjectReferences">
@@ -31,6 +31,7 @@
       </ProjectReferences>
       <ProjectReferences Remove="@(ProjectReferences)" Condition="'%(ProjectReferences.Platform)' == 'x64' AND ('%(ProjectReferences.Architecture)' == 'sse2' OR '%(ProjectReferences.Architecture)' == 'sse' OR '%(ProjectReferences.Architecture)' == 'fpu')" />
       <ProjectReferences Remove="@(ProjectReferences)" Condition="'%(ProjectReferences.Platform)' == 'Win32' AND '%(ProjectReferences.Architecture)' == 'default'" />
+      <ProjectReferences Remove="@(ProjectReferences)" Condition="'%(ProjectReferences.Platform)' == 'ARM64' AND '%(ProjectReferences.Architecture)' != 'default'" />
 
       <ProjectReferences_LTCG Include="@(ProjectReferences)">
         <AdditionalProperties>WholeProgramOptimization=true</AdditionalProperties>
