@@ -28,9 +28,22 @@ steps:
   inputs:
     artifactName: 'LAME MP3-$(Build.SourceVersion)'
 
-- task: GithubRelease@0 
+- task: GitHubRelease@0
   displayName: 'Create GitHub Release'
   inputs:
-    githubConnection: henricj
-    repositoryName: henricj/lame
+    gitHubConnection: 'henricj'
+    repositoryName: 'henricj/lame'
     assets: '$(Build.ArtifactStagingDirectory)/**'
+
+- task: GitHubRelease@0
+  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+  displayName: 'Update GitHub "Latest" Release'
+  inputs:
+    gitHubConnection: 'henricj'
+    repositoryName: 'henricj/lame'
+    assets: '$(System.DefaultWorkingDirectory)/*.zip'
+    action: 'edit'
+    tagSource: 'manual'
+    tag: '$(Build.SourceBranchName)-latest'
+    isPreRelease: true
+    addChangeLog: false
