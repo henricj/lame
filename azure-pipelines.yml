@@ -1,0 +1,64 @@
+pool:
+  vmImage: 'VS2017-Win2016'
+
+variables:
+  buildSolution: 'lame/vc_solution/build.proj'
+
+steps:
+- task: NuGetToolInstaller@0
+
+- task: MSBuild@1
+  inputs:
+    solution: '$(buildSolution)'
+    maximumCpuCount: true
+
+- bash:
+    echo "##vso[task.setvariable variable=BUILD_NAME]lame-$(git describe --tags --dirty --always)"
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)/build/bin'
+    contents: '**/?(*.exe|*.dll|*.lib|*.pdb)'
+    targetFolder: '$(Build.ArtifactStagingDirectory)/$(BUILD_NAME)'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)/lame'
+    contents: 'include/lame.h'
+    targetFolder: '$(Build.ArtifactStagingDirectory)/$(BUILD_NAME)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    artifactName: '$(BUILD_NAME)'
+
+- task: DeleteFiles@1
+  inputs:
+    sourceFolder: '$(Build.ArtifactStagingDirectory)/$(BUILD_NAME)'
+    contents: '**/*.pdb'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/$(BUILD_NAME)'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(BUILD_NAME).zip'
+
+- task: GitHubRelease@0
+  displayName: 'Create GitHub Release'
+  inputs:
+    gitHubConnection: 'henricj'
+    repositoryName: 'henricj/lame'
+    assets: '$(Build.ArtifactStagingDirectory)/*.zip'
+
+- task: GitHubRelease@0
+  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
+  displayName: 'Update GitHub "Latest" Release'
+  inputs:
+    gitHubConnection: 'henricj'
+    repositoryName: 'henricj/lame'
+    assets: '$(Build.ArtifactStagingDirectory)/*.zip'
+    action: 'edit'
+    tagSource: 'manual'
+    tag: '$(Build.SourceBranchName)-latest'
+    isPreRelease: true
+    addChangeLog: false
+
