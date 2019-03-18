@@ -1,0 +1,30 @@
+pool:
+  vmImage: 'VS2017-Win2016'
+
+variables:
+  buildSolution: 'lame\vc_solution\build.proj'
+
+steps:
+- task: NuGetToolInstaller@0
+
+- task: MSBuild@1
+  inputs:
+    solution: '$(buildSolution)'
+    maximumCpuCount: true
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)\build\bin'
+    contents: '**/?(*.exe|*.dll|*.lib)'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)\lame'
+    contents: 'include\lame.h'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    artifactName: 'LAME MP3-$(Build.SourceVersion)'
+
