@@ -14,17 +14,23 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)\build\bin'
+    sourceFolder: '$(Build.SourcesDirectory)/build/bin'
     contents: '**/?(*.exe|*.dll|*.lib)'
     targetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: CopyFiles@2
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)\lame'
-    contents: 'include\lame.h'
+    sourceFolder: '$(Build.SourcesDirectory)/lame'
+    contents: 'include/lame.h'
     targetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
   inputs:
     artifactName: 'LAME MP3-$(Build.SourceVersion)'
 
+- task: GithubRelease@0 
+  displayName: 'Create GitHub Release'
+  inputs:
+    githubConnection: henricj
+    repositoryName: henricj/lame
+    assets: '$(Build.ArtifactStagingDirectory)/**'
