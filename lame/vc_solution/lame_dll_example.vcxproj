@@ -42,7 +42,7 @@
     <ProjectName>lame_enc_dll_example</ProjectName>
     <ProjectGuid>{D169F06E-6607-4A9F-A075-2335717B9AB5}</ProjectGuid>
     <RootNamespace>lame_enc_dll_example</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <WindowsSDKDesktopARM64Support>true</WindowsSDKDesktopARM64Support>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

@@ -60,7 +60,7 @@
     <ProjectGuid>{633499B4-840A-4C43-8865-6A7DDA0B5238}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>lame</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <WindowsSDKDesktopARM64Support>true</WindowsSDKDesktopARM64Support>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
