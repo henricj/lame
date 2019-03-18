@@ -8,7 +8,7 @@
   <Import Project="lame_config-defs.props" />
   <ItemGroup>
     <Project Include="$(MsBuildThisFileDirectory)lame.sln"></Project>
-    <Configuration Include="Static Release" />
+    <Configuration Include="Release;Static Release" />
     <Platform Include="x64;Win32;ARM64" />
     <Architecture Include="default;fpu;sse;sse2;avx;avx2" />
   </ItemGroup>
