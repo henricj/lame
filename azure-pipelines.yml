@@ -43,13 +43,6 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(BUILD_NAME).zip'
 
 - task: GitHubRelease@0
-  displayName: 'Create GitHub Release'
-  inputs:
-    gitHubConnection: 'henricj'
-    repositoryName: 'henricj/lame'
-    assets: '$(Build.ArtifactStagingDirectory)/*.zip'
-
-- task: GitHubRelease@0
   condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
   displayName: 'Update GitHub "Latest" Release'
   inputs:
@@ -62,3 +55,9 @@ steps:
     isPreRelease: true
     addChangeLog: false
 
+- task: GitHubRelease@0
+  displayName: 'Create GitHub Release'
+  inputs:
+    gitHubConnection: 'henricj'
+    repositoryName: 'henricj/lame'
+    assets: '$(Build.ArtifactStagingDirectory)/*.zip'
